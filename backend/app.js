@@ -3,6 +3,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const env = require('./config/env')
 const routes = require('./routes')
+const prisma = require('./config/db')
 const { webhook } = require('./controllers/payment.controller')
 const { notFound, errorHandler } = require('./middleware/error')
 
@@ -24,6 +25,19 @@ app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), web
 app.use(express.json({ limit: '1mb' }))
 
 app.use('/api', routes)
+
+app.get('/api/health', (req, res) => {
+
+   prisma.venue.findFirst().then((venue) => {
+    if (!venue) {
+      return res.status(500).json({ status: 'error', message: 'Database connection failed' })
+    }
+})
+
+  res.status(200).json({ status: 'ok' }
+    
+  )
+})
 
 app.use(notFound)
 app.use(errorHandler)
