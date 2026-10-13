@@ -28,13 +28,13 @@ app.use('/api', routes)
 
 app.get('/api/health', (req, res) => {
 
-   prisma.venue.findFirst().then((venue) => {
+  let v= prisma.venue.findFirst().then((venue) => {
     if (!venue) {
       return res.status(500).json({ status: 'error', message: 'Database connection failed' })
     }
 })
 
-  res.status(200).json({ status: 'ok' }
+  res.status(200).json({ status: 'ok', venue: v  }
     
   )
 })
